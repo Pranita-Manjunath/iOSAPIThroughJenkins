@@ -3,6 +3,7 @@ pipeline{
     stages{
         stage('Build') {
             steps {
+                checkout scm
                 echo "Build stage"
                 sh "flutter clean"
                 sh "flutter pub get"
