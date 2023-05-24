@@ -12,7 +12,7 @@ pipeline{
         stage('Upload to SharePoint') {
             steps {
                 script {
-                    sh '${WORKSPACE}/build/artifacts && zip -r artifacts.zip artifacts'
+                    sh '${WORKSPACE}/build && zip -r artifacts.zip artifacts'
 
                     def siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
                     def libraryName = "Documents"
