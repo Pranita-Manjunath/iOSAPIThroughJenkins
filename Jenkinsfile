@@ -11,7 +11,7 @@ pipeline{
             }
         stage('Upload Artifacts to SharePoint') {
               steps {
-                sh 'cp ${WORKSPACE}/build/artifacts Documents/Jenkins_folder'
+                sh 'cp ${WORKSPACE}/build/artifacts/Runner.ipa Documents/Jenkins_folder'
               }
         }
     }
