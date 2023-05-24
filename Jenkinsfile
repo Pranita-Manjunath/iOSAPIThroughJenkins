@@ -9,5 +9,10 @@ pipeline{
                 sh 'xcodebuild -exportArchive -archivePath build/Runner.xcarchive -exportPath build/Users/zmo-mac-testlab-02/Desktop/Runner.ipa -exportOptionsPlist ExportOptions.plist'
                 }
             }
+        stage('Upload Artifacts to SharePoint') {
+              steps {
+                sh 'cp /Users/zmo-mac-testlab-02/Downloads/artifact.zip Documents/Jenkins Folder'
+              }
         }
+    }
 }
