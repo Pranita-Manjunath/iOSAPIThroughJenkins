@@ -1,9 +1,5 @@
 pipeline{
     agent any
-     parameters {
-                string(name: 'SITE_URL', description: 'SharePoint Site URL')
-                string(name: 'LIBRARY_NAME', description: 'Library Name')
-     }
     stages{
         stage('Build') {
             steps {
@@ -19,8 +15,8 @@ pipeline{
                     sh 'cd ${WORKSPACE}/build && zip -r artifacts.zip artifacts'
 
                     // Define the SharePoint site URL, library name, and file path
-                    def siteUrl = params.SITE_URL
-                    def libraryName = params.LIBRARY_NAME
+                    def siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
+                    def libraryName = "Documents"
                     def filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
