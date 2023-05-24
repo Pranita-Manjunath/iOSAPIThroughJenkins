@@ -1,5 +1,10 @@
 pipeline{
     agent any
+     parameters {
+                string(name: 'SITE_URL', description: 'SharePoint Site URL')
+                string(name: 'LIBRARY_NAME', description: 'Library Name')
+                string(name: 'FILE_PATH', description: 'File Path')
+     }
     stages{
         stage('Build') {
             steps {
@@ -14,41 +19,33 @@ pipeline{
                 script {
                     sh 'cd ${WORKSPACE}/build && zip -r artifacts.zip artifacts'
 
-                    def siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
-                    def libraryName = "Documents"
-                    def filePath = "${WORKSPACE}/build/artifacts.zip"
+                    // Define the SharePoint site URL, library name, and file path
+                    def siteUrl = params.SITE_URL
+                    def libraryName = params.LIBRARY_NAME
+                    def filePath = params.FILE_PATH
 
                     // Execute the PowerShell script
-                     sh '''
-                            pwsh -Command "& {
-                                $ErrorActionPreference = 'Stop'
-                                $SiteUrl = '${siteUrl}'
-                                $LibraryName = '${libraryName}'
-                                $FilePath = '${filePath}'
+                    sh '''
+                        pwsh -Command "& {
+                            $ErrorActionPreference = 'Stop'
+                            $SiteUrl = '${siteUrl}'
+                            $LibraryName = '${libraryName}'
+                            $FilePath = '${filePath}'
 
-                                # Paste the PowerShell script here
-                                # Import the SharePoint PnP PowerShell module
-                                Import-Module -Name SharePointPnPPowerShellOnline
+                            Import-Module -Name SharePointPnPPowerShellOnline
 
-                                # Connect to the SharePoint site
-                                Connect-PnPOnline -Url $SiteUrl
+                            # Connect to SharePoint Online
+                            Connect-PnPOnline -Url $SiteUrl
 
-                                # Get the SharePoint library
-                                $library = Get-PnPList -Identity $LibraryName
+                            # Upload the file to SharePoint
+                            Add-PnPFile -Path $FilePath -Folder $LibraryName
 
-                                # Create a new file in the library
-                                $file = Add-PnPFile -Path $FilePath -Folder $library.RootFolder
-
-                                # Get the uploaded file details
-                                $fileDetails = Get-PnPListItem -List $library -Id $file.UniqueId -Fields "FileLeafRef", "EncodedAbsUrl"
-
-                                # Display the uploaded file URL
-                                Write-Host "File uploaded successfully. URL: $($fileDetails.EncodedAbsUrl)"
-
-                                # Call the PowerShell function with the parameters
-                                Upload-FileToSharePoint -SiteUrl $SiteUrl -LibraryName $LibraryName -FilePath $FilePath
-                            }"
-                        '''
+                            Write-Host 'File uploaded successfully. URL:'
+                            $List = Get-PnPList -Identity $LibraryName
+                            $Item = Get-PnPListItem -List $List -Id $List.ItemCount
+                            $Item.File.ServerRelativeUrl
+                        }"
+                    '''
                 }
             }
         }
