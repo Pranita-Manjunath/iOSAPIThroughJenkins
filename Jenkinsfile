@@ -23,7 +23,7 @@ pipeline{
                                 }
                 } */
                     sh '''
-                        export ARTIFACT_PATH= ${WORKSPACE}/build/artifacts/Runner.ipa
+                        export ARTIFACT_PATH= ${WORKSPACE}/build/artifacts
                         export SHAREPOINT_URL=https:https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect
                         export LIBRARY_NAME=Document/Jenkins_folder
 
