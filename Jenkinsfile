@@ -19,30 +19,36 @@ pipeline{
                     def filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
-                    pwsh -Command "$ErrorActionPreference = 'Stop'; $SiteUrl = \\"$env:SITE_URL\\"; $LibraryName = \\"$env:LIBRARY_NAME\\"; $FilePath = \\"$env:FILE_PATH\\"
+                     sh '''
+                            pwsh -Command "& {
+                                $ErrorActionPreference = 'Stop'
+                                $SiteUrl = '${siteUrl}'
+                                $LibraryName = '${libraryName}'
+                                $FilePath = '${filePath}'
 
+                                # Paste the PowerShell script here
+                                # Import the SharePoint PnP PowerShell module
+                                Import-Module -Name SharePointPnPPowerShellOnline
 
-                    # Import the SharePoint PnP PowerShell module
-                    Import-Module -Name SharePointPnPPowerShellOnline
+                                # Connect to the SharePoint site
+                                Connect-PnPOnline -Url $SiteUrl
 
-                    # Connect to the SharePoint site
-                    Connect-PnPOnline -Url $SiteUrl
+                                # Get the SharePoint library
+                                $library = Get-PnPList -Identity $LibraryName
 
-                    # Get the SharePoint library
-                    $library = Get-PnPList -Identity $LibraryName
+                                # Create a new file in the library
+                                $file = Add-PnPFile -Path $FilePath -Folder $library.RootFolder
 
-                    # Create a new file in the library
-                    $file = Add-PnPFile -Path $FilePath -Folder $library.RootFolder
+                                # Get the uploaded file details
+                                $fileDetails = Get-PnPListItem -List $library -Id $file.UniqueId -Fields "FileLeafRef", "EncodedAbsUrl"
 
-                    # Get the uploaded file details
-                    $fileDetails = Get-PnPListItem -List $library -Id $file.UniqueId -Fields "FileLeafRef", "EncodedAbsUrl"
+                                # Display the uploaded file URL
+                                Write-Host "File uploaded successfully. URL: $($fileDetails.EncodedAbsUrl)"
 
-                    # Display the uploaded file URL
-                    Write-Host "File uploaded successfully. URL: $($fileDetails.EncodedAbsUrl)"
-
-                    # Call the PowerShell function with the parameters
-                    Upload-FileToSharePoint -SiteUrl $SiteUrl -LibraryName $LibraryName -FilePath $FilePath"
-
+                                # Call the PowerShell function with the parameters
+                                Upload-FileToSharePoint -SiteUrl $SiteUrl -LibraryName $LibraryName -FilePath $FilePath
+                            }"
+                        '''
                 }
             }
         }
