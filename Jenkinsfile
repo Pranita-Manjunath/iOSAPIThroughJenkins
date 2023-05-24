@@ -14,12 +14,12 @@ pipeline{
                 script {
                     sh 'cd ${WORKSPACE}/build && zip -r artifacts.zip artifacts'
 
-                    def siteUrl = ""
-                    def libraryName = ""
-                    def filePath = ""
+                    def siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
+                    def libraryName = "Documents"
+                    def filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
-                        pwsh -Command "$ErrorActionPreference = 'Stop'; $SiteUrl = 'https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect'; $LibraryName = 'Documents'; $FilePath = '${WORKSPACE}/build/artifacts.zip';
+                        pwsh -Command "$ErrorActionPreference = 'Stop'; $SiteUrl = \\"$env:SITE_URL\\"; $LibraryName = \\"$env:LIBRARY_NAME\\"; $FilePath = \\"$env:FILE_PATH\\";
 
                         # Import the SharePoint PnP PowerShell module
                         Import-Module -Name SharePointPnPPowerShellOnline
