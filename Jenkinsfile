@@ -21,6 +21,9 @@ pipeline{
 
                     // Execute the PowerShell script
                     sh '''
+                        echo "siteUrl: $siteUrl"
+                        echo "libraryName: $libraryName"
+                        echo "filePath: $filePath"
                         pwsh -command "./scripts/sharepoint_upload.ps1 -siteUrl '$siteUrl' -target '$libraryName' -source '$filePath'"
                     '''
                 }
