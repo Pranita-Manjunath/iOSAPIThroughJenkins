@@ -1,7 +1,8 @@
 param (
     [string]$siteUrl,
     [string]$target,
-    [string]$source
+    [string]$source,
+    [string]$zipPath
 )
 
 Write-Host "This is echo command $siteUrl, $target, $source"
@@ -12,5 +13,8 @@ $SourcefolderPath = "$source"
 
 $target="Documents/Jenkins_folder"
 
+# Compress the folder
+Compress-Archive -Path $SourcefolderPath -DestinationPath $zipPath
+
 # Upload the zip file to SharePoint
-Add-PnPFile -Path $SourcefolderPath -Folder $target
+Add-PnPFile -Path $zipPath -Folder $target

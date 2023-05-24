@@ -1,5 +1,11 @@
 pipeline{
     agent any
+    environment {
+            siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
+            libraryName = "Documents"
+            filePath = "${WORKSPACE}/build/artifacts/Runner.ipa"
+            ZipfilePath = "${WORKSPACE}/zip/artifacts.zip"
+    }
     stages{
         stage('Build') {
             steps {
@@ -12,19 +18,13 @@ pipeline{
         stage('Upload to SharePoint') {
             steps {
                 script {
-                    sh 'cd ${WORKSPACE}/build && zip -r artifacts.zip artifacts'
-
-                    // Define the SharePoint site URL, library name, and file path
-                    $siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
-                    $libraryName = "Documents"
-                    $filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
                     sh '''
                         echo "siteUrl: $siteUrl"
                         echo "libraryName: $libraryName"
                         echo "filePath: $filePath"
-                        pwsh -command "./scripts/sharepoint_upload.ps1 -siteUrl '$siteUrl' -target '$libraryName' -source '$filePath'"
+                        pwsh -command "./scripts/sharepoint_upload.ps1 -siteUrl '$siteUrl' -target '$libraryName' -source '$filePath' -zipPath 'ZipfilePath'"
                     '''
                 }
             }
