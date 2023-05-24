@@ -32,7 +32,7 @@ pipeline{
                             FOLDER_URL=$(curl -X POST -u username:password -H "Content-Type: application/json" -d '{"__metadata":{"type":"SP.Folder"},"ServerRelativeUrl":"/sites/your-site/'"$LIBRARY_NAME"'/'"$FOLDER_NAME"'"}}' "$SHAREPOINT_URL/_api/web/GetFolderByServerRelativeUrl('/sites/your-site/$LIBRARY_NAME')/folders" | jq -r '.d.ServerRelativeUrl')
 
                             # Upload artifacts to the SharePoint folder
-                            find "$ARTIFACT_PATH" -type f -exec curl -X PUT -u username:password --data-binary @{} "$SHAREPOINT_URL/_api/web/GetFolderByServerRelativeUrl('$FOLDER_URL')/Files/add?url={}&overwrite=true" \;
+                            find /Users/zmo-mac-testlab-02/.jenkins/workspace/iOS_BUILD_THROUGH_PIPELINE/build/artifacts -type f -exec curl -X PUT -u manjup2@medtronic.com:BlackBerry-16 --data-binary "@{}" "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect/_api/web/GetFolderByServerRelativeUrl('$FOLDER_URL')/Files/add?url={}&overwrite=true" ;
                     '''
 
               }
