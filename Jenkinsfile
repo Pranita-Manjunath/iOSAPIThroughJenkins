@@ -11,7 +11,7 @@ pipeline{
             }
         stage('Upload Artifacts to SharePoint') {
               steps {
-                sh 'cp /Users/zmo-mac-testlab-02/Downloads/Desktop/Runner.ipa Documents/Jenkins Folder'
+                sh 'cp /Users/zmo-mac-testlab-02/Downloads/Desktop Documents/Jenkins Folder'
               }
         }
     }
