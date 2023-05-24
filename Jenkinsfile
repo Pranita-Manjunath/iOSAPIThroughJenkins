@@ -14,20 +14,12 @@ pipeline{
                 script {
                     sh 'cd ${WORKSPACE}/build && zip -r artifacts.zip artifacts'
 
-                    def siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
-                    def libraryName = "Documents"
-                    def filePath = "${WORKSPACE}/build/artifacts.zip"
+                    def siteUrl = ""
+                    def libraryName = ""
+                    def filePath = ""
 
                     // Execute the PowerShell script
-                    powershell(returnStdout: true, script: '''
-                        param(
-                            [Parameter(Mandatory = $true)]
-                            [String]$SiteUrl,
-                            [Parameter(Mandatory = $true)]
-                            [String]$LibraryName,
-                            [Parameter(Mandatory = $true)]
-                            [String]$FilePath
-                        )
+                        pwsh -Command "$ErrorActionPreference = 'Stop'; $SiteUrl = 'https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect'; $LibraryName = 'Documents'; $FilePath = '${WORKSPACE}/build/artifacts.zip';
 
                         # Import the SharePoint PnP PowerShell module
                         Import-Module -Name SharePointPnPPowerShellOnline
@@ -48,8 +40,7 @@ pipeline{
                         Write-Host "File uploaded successfully. URL: $($fileDetails.EncodedAbsUrl)"
 
                         # Call the PowerShell function with the parameters
-                        Upload-FileToSharePoint -SiteUrl $SiteUrl -LibraryName $LibraryName -FilePath $FilePath
-                    ''', args: "-SiteUrl '$siteUrl' -LibraryName '$libraryName' -FilePath '$filePath'")
+                        Upload-FileToSharePoint -SiteUrl $SiteUrl -LibraryName $LibraryName -FilePath $FilePath"
 
                 }
             }
