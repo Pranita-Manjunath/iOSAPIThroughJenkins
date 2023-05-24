@@ -15,9 +15,9 @@ pipeline{
                     sh 'cd ${WORKSPACE}/build && zip -r artifacts.zip artifacts'
 
                     // Define the SharePoint site URL, library name, and file path
-                    def siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
-                    def libraryName = "Documents"
-                    def filePath = "${WORKSPACE}/build/artifacts.zip"
+                    $siteUrl = "https://medtronic.sharepoint.com/sites/PAACDevOps-CarelinkConnect"
+                    $libraryName = "Documents"
+                    $filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
                     sh '''
