@@ -3,7 +3,6 @@ pipeline{
      parameters {
                 string(name: 'SITE_URL', description: 'SharePoint Site URL')
                 string(name: 'LIBRARY_NAME', description: 'Library Name')
-                string(name: 'FILE_PATH', description: 'File Path')
      }
     stages{
         stage('Build') {
@@ -22,29 +21,11 @@ pipeline{
                     // Define the SharePoint site URL, library name, and file path
                     def siteUrl = params.SITE_URL
                     def libraryName = params.LIBRARY_NAME
-                    def filePath = params.FILE_PATH
+                    def filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
                     sh '''
-                        pwsh -Command "& {
-                            $ErrorActionPreference = 'Stop'
-                            $SiteUrl = '${siteUrl}'
-                            $LibraryName = '${libraryName}'
-                            $FilePath = '${filePath}'
-
-                            Import-Module -Name SharePointPnPPowerShellOnline
-
-                            # Connect to SharePoint Online
-                            Connect-PnPOnline -Url $SiteUrl
-
-                            # Upload the file to SharePoint
-                            Add-PnPFile -Path $FilePath -Folder $LibraryName
-
-                            Write-Host 'File uploaded successfully. URL:'
-                            $List = Get-PnPList -Identity $LibraryName
-                            $Item = Get-PnPListItem -List $List -Id $List.ItemCount
-                            $Item.File.ServerRelativeUrl
-                        }"
+                        pwsh -command './android/devops/upload-to-sp.ps1 -siteUrl $siteUrl -target $libraryName -source $filePath'
                     '''
                 }
             }
