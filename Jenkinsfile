@@ -19,7 +19,8 @@ pipeline{
                     def filePath = "${WORKSPACE}/build/artifacts.zip"
 
                     // Execute the PowerShell script
-                    pwsh -Command "$ErrorActionPreference = 'Stop'; $SiteUrl = \\"$env:SITE_URL\\"; $LibraryName = \\"$env:LIBRARY_NAME\\"; $FilePath = \\"$env:FILE_PATH\\";
+                    pwsh -Command "$ErrorActionPreference = 'Stop'; $SiteUrl = \\"$env:SITE_URL\\"; $LibraryName = \\"$env:LIBRARY_NAME\\"; $FilePath = \\"$env:FILE_PATH\\"
+
 
                     # Import the SharePoint PnP PowerShell module
                     Import-Module -Name SharePointPnPPowerShellOnline
