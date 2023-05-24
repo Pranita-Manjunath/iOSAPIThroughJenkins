@@ -25,7 +25,7 @@ pipeline{
 
                     // Execute the PowerShell script
                     sh '''
-                        pwsh -command './android/devops/upload-to-sp.ps1 -siteUrl $siteUrl -target $libraryName -source $filePath'
+                        pwsh -command 'sharepoint_upload.ps1 -siteUrl $siteUrl -target $libraryName -source $filePath'
                     '''
                 }
             }
